@@ -10,7 +10,7 @@ import (
 func TestName(t *testing.T) {
 	ctx := context.Background()
 	cli := NewBgmClient("test")
-	resp, err := cli.GetMe(ctx, "Bearer db614f9a334c9d20cac4515015cc57f5aae1c30c")
+	resp, err := cli.GetMe(ctx, "Bearer xxx")
 	if err != nil {
 		return
 	}
