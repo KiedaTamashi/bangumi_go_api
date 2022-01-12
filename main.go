@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/XiaoSanGit/bangumi_go_api/pkg/client/bgm"
+	"github.com/XiaoSanGit/bangumi_go_api/pkg/client/bgm_v0"
 )
 
 func main() {
-	cli := bgm.NewClient("test")
+	cli := bgm_v0.NewBgmClient("test")
 	print(cli)
 }
