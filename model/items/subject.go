@@ -33,39 +33,8 @@ func (st SubjectType) ToString() string {
 	}
 }
 
-type CollectionType int
-
-const (
-	CollectionTypeWantWatch  = CollectionType(1) //想看
-	CollectionTypeHasWatched = CollectionType(2) //看过
-	CollectionTypeWatching   = CollectionType(3) //在看
-	CollectionTypePutAside   = CollectionType(4) //搁置
-	CollectionTypeForgive    = CollectionType(5) //抛弃
-)
-
-func (ct CollectionType) IsSupported() bool {
-	return ct == CollectionTypeWantWatch || ct == CollectionTypeHasWatched || ct == CollectionTypeWatching || ct == CollectionTypePutAside || ct == CollectionTypeForgive
-}
-
-func (ct CollectionType) ToString() string {
-	switch ct {
-	case CollectionTypeWantWatch:
-		return "1"
-	case CollectionTypeHasWatched:
-		return "2"
-	case CollectionTypeWatching:
-		return "3"
-	case CollectionTypePutAside:
-		return "4"
-	case CollectionTypeForgive:
-		return "5"
-	default:
-		return ""
-	}
-}
-
-//SubjectUserCollection 查询用户收藏时返回的subject 结构
-type SubjectUserCollection struct {
+//UserCollection 查询用户收藏时返回的subject 结构
+type UserCollection struct {
 	SubjectId   int         `json:"subject_id,omitempty"`
 	SubjectType int         `json:"subject_type,omitempty"`
 	Rate        int         `json:"rate,omitempty"`

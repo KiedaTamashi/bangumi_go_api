@@ -31,7 +31,7 @@ func TestClient_GetUser(t *testing.T) {
 func TestClient_GetUserCollection(t *testing.T) {
 	ctx := context.Background()
 	cli := NewBgmClient("test")
-	resp, err := cli.GetUserCollection(ctx, "", "sai", items.SubjectTypeAnime, items.CollectionTypeHasWatched, 40, 5)
+	resp, err := cli.GetUserCollection(ctx, "", "sai", items.SubjectTypeAnime, items.CollectionStatusIdCollect, 40, 5)
 	if err != nil {
 		return
 	}

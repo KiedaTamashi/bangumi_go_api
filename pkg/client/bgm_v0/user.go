@@ -51,20 +51,21 @@ func (cli *Client) GetUser(ctx context.Context, authToken string, query string) 
 //GetUserCollection 根据用户username 和筛选条件 搜索用户收藏. 获取对应用户的收藏，查看私有收藏需要access token。
 //todo [refine] golang optional input 改造
 func (cli *Client) GetUserCollection(ctx context.Context, authToken string, username string, subjectType items.SubjectType,
-	collectionType items.CollectionType, limit int64, offset int64) ([]*items.SubjectUserCollection, error) {
+	collectionStatusId items.CollectionStatusId, limit int64, offset int64) ([]*items.UserCollection, error) {
 	//var resp = struct {
-	//	data []*items.SubjectUserCollection
+	//	data []*items.UserCollection
 	//}{}
-	var resp = make([]*items.SubjectUserCollection, 0)
+	var resp = make([]*items.UserCollection, 0)
 	if !subjectType.IsSupported() {
 		return nil, errno.Errorf(errno.ErrBadRequest, "subject type %v is illegal!", subjectType)
 	}
-	if !collectionType.IsSupported() {
-		return nil, errno.Errorf(errno.ErrBadRequest, "collection type %v is illegal!", collectionType)
+	collectionStatusType := collectionStatusId.Type()
+	if !collectionStatusType.IsSupported() {
+		return nil, errno.Errorf(errno.ErrBadRequest, "collection type %v is illegal!", collectionStatusType)
 	}
 	param := map[string]string{
 		"subject_type": subjectType.ToString(),
-		"type":         collectionType.ToString(),
+		"type":         collectionStatusType.String(),
 		"limit":        strconv.FormatInt(limit, 10),
 		"offset":       strconv.FormatInt(offset, 10),
 	}
