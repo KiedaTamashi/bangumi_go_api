@@ -10,7 +10,7 @@ import (
 func TestGetSubject(t *testing.T) {
 	ctx := context.Background()
 	cli := NewBgmClient("test")
-	resp, err := cli.GetSubject(ctx, "Bearer db614f9a334c9d20cac4515015cc57f5aae1c30c", "311310")
+	resp, err := cli.GetSubject(ctx, "", "311310")
 	if err != nil {
 		return
 	}

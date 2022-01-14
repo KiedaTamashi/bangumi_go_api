@@ -20,7 +20,7 @@ func (cli *Client) GetSubject(ctx context.Context, authToken string, subjectId s
 	if subjectId == "" {
 		return nil, errno.Errorf(errno.ErrBadRequest, "subject id is required!")
 	}
-	err := cli.GET(ctx, "/subjects/"+subjectId, authToken, 0, param, resp)
+	err := cli.GET(ctx, "/v0/subjects/"+subjectId, authToken, 0, param, nil, resp)
 	if err != nil {
 		return nil, err
 	}

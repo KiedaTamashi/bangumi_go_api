@@ -13,16 +13,6 @@ import (
 
 var logger = types.InitBasicLogger("bgmLog.log")
 
-//type BgmClient struct {
-//	Host     string
-//	httpCli  *http.Client
-//	SkipPost bool
-//}
-
-func NewBgmClient(caller string) *Client {
-	return NewClinetConcurrency(0, caller)
-}
-
 type Client struct {
 	Caller string
 
@@ -33,14 +23,15 @@ type Client struct {
 	skip            bool
 }
 
+func NewBgmClient(caller string) *Client {
+	return NewClinetConcurrency(0, caller)
+}
+
 type respType struct {
-	//Message string `json:"message"`
-	//Code    int    `json:"code"`
-	//Data    struct {
-	//	StatusCode int    `json:"status_code"`
-	//	RespData   string `json:"resp_data"`
-	//} `json:"data"`
-	Data string `json:"data"`
+	Total  int64           `json:"total,omitempty"`
+	Limit  int64           `json:"limit,omitempty"`
+	Offset int64           `json:"offset,omitempty"`
+	Data   json.RawMessage `json:"data"`
 }
 
 func NewClinetConcurrency(chanLength uint, caller string) *Client {
@@ -50,7 +41,7 @@ func NewClinetConcurrency(chanLength uint, caller string) *Client {
 func NewClientWithMaxConcurrency(c uint, caller string) *Client {
 	cli := &Client{
 		Caller: caller,
-		host:   "https://api.bgm.tv/v0",
+		host:   "https://api.bgm.tv", //v0
 		//proxyUrl: "https://api.bgm.tv/v0/",
 		cli: &http.Client{},
 	}
@@ -98,8 +89,14 @@ func (cli *Client) Call(ctx context.Context, method, absolutePath string,
 		}
 		// 校验统一抓取返回的结果
 		if statusCode != 200 {
-			err = errno.Errorf(errno.ErrInternalServer, "http error, path: %s, request body: %s, status_code: %d, response body: %s",
-				absolutePath, string(body), statusCode, content)
+			var httpErrorReason string
+			if statusCode == 404 {
+				httpErrorReason = "Not Found"
+			} else if statusCode == 422 {
+				httpErrorReason = "Validation Error"
+			}
+			err = errno.Errorf(errno.ErrInternalServer, "http [%s] error, path: %s, request body: %s, status_code: %d, response body: %s",
+				httpErrorReason, absolutePath, string(body), statusCode, content)
 			logger.Error("%v", err)
 			return err
 		}
@@ -114,22 +111,32 @@ func (cli *Client) Call(ctx context.Context, method, absolutePath string,
 		//	Data 	string `json:"data"`
 		//}
 		resp := &respType{
-			Data: content,
+			//Data: content,
 		}
 
-		//if err := json.Unmarshal([]byte(content), &resp); err != nil {
-		//	err = errno.Errorf(errno.ErrInternalServer, "json.Unmarshal error, json body: %s", content)
-		//	logger.Error( "%v", err)
-		//	return err
-		//}
-		// todo 之后添加重试。应对网络波动 Token等授权有问题
+		// todo [refine] 如何才能优美并整合地解析？
+		if err := json.Unmarshal([]byte(content), &resp); err != nil || resp.Data == nil {
+			if err != nil {
+				err = errno.Errorf(errno.ErrInternalServer, "json.Unmarshal error, json body: %s", content)
+				logger.Error("%v", err)
+				return err
+			}
+			resp = &respType{
+				Data: []byte(content),
+			}
+		}
+
+		// todo [refine] 之后添加重试。应对网络波动 Token等授权有问题
 		//if retryN < retry && resp.Code != 0 {
 		//	logger.Debug("respond code = %d, message = %s, retry", resp.Code, resp.Message)
 		//	retryN++
 		//	continue
 		//}
+		tmp := string(resp.Data)
+		print(tmp)
+
 		if out != nil {
-			if err := json.Unmarshal([]byte(resp.Data), out); err != nil {
+			if err := json.Unmarshal(resp.Data, out); err != nil {
 				err = errno.Errorf(errno.ErrInternalServer, "json.Unmarshal error, json string: %s", resp.Data)
 				logger.Error("%v", err)
 				return err
@@ -152,7 +159,9 @@ func (cli *Client) callJson(ctx context.Context, method, absolutePath, authToken
 	}
 	headers := make(map[string]string)
 	headers["Content-Type"] = "application/x-www-form-urlencoded"
-	headers["Authorization"] = authToken
+	if authToken != "" {
+		headers["Authorization"] = authToken
+	}
 	return cli.Call(ctx, method, absolutePath, nil, headers, retry, body, out)
 }
 
@@ -164,13 +173,13 @@ func (cli *Client) POST(ctx context.Context, absolutePath, authToken string, ret
 	return cli.callJson(ctx, "POST", absolutePath, authToken, retry, in, out)
 }
 
-func (cli *Client) GET(ctx context.Context, absolutePath, authToken string, retry uint, in map[string]string, out interface{}) error {
+func (cli *Client) GET(ctx context.Context, absolutePath, authToken string, retry uint, param map[string]string, in interface{}, out interface{}) error {
 	if cli.skip {
 		return nil
 	}
-	if in != nil {
+	if param != nil {
 		absolutePath = fmt.Sprintf("%s?", absolutePath)
-		for k, v := range in {
+		for k, v := range param {
 			absolutePath = fmt.Sprintf("%s%s=%s&", absolutePath, k, v)
 		}
 		absolutePath = strings.TrimSuffix(absolutePath, "&")
