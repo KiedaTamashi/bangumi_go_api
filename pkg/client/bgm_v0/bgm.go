@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	mError "github.com/XiaoSanGit/bangumi_go_api/model/error"
 	"github.com/XiaoSanGit/bangumi_go_api/pkg/client/httpcli"
 	"github.com/XiaoSanGit/bangumi_go_api/pkg/errno"
 	"github.com/XiaoSanGit/bangumi_go_api/pkg/types"
@@ -94,6 +95,10 @@ func (cli *Client) Call(ctx context.Context, method, absolutePath string,
 				httpErrorReason = "Not Found"
 			} else if statusCode == 422 {
 				httpErrorReason = "Validation Error"
+				httpErrorRsp := mError.ValidationError{}
+				if err = json.Unmarshal([]byte(content), &httpErrorRsp); err == nil {
+					//todo [refine] 解析错误码内容，做特殊处理？
+				}
 			}
 			err = errno.Errorf(errno.ErrInternalServer, "http [%s] error, path: %s, request body: %s, status_code: %d, response body: %s",
 				httpErrorReason, absolutePath, string(body), statusCode, content)

@@ -7,12 +7,12 @@ import (
 )
 
 //GetSubject 根据id获得单个条目的详细信息
-func (cli *Client) GetSubject(ctx context.Context, authToken string, subjectId string) (*items.AnimeBgm, error) {
+func (cli *Client) GetSubject(ctx context.Context, authToken string, subjectId string) (*items.SubjectBgm, error) {
 
-	//var subjectList []*items.AnimeBgm
+	//var subjectList []*items.SubjectBgm
 	//
 	//for {
-	var resp = &items.AnimeBgm{}
+	var resp = &items.SubjectBgm{}
 	param := map[string]string{
 		//"pageIndex": 1,
 		//"pageSize":  100,
