@@ -124,7 +124,6 @@ func (cli *Client) Call(ctx context.Context, method, absolutePath string,
 			if err != nil {
 				err = errno.Errorf(errno.ErrInternalServer, "json.Unmarshal error, json body: %s", content)
 				logger.Error("%v", err)
-				return err
 			}
 			resp = &respType{
 				Data: []byte(content),
@@ -137,9 +136,6 @@ func (cli *Client) Call(ctx context.Context, method, absolutePath string,
 		//	retryN++
 		//	continue
 		//}
-		tmp := string(resp.Data)
-		print(tmp)
-
 		if out != nil {
 			if err := json.Unmarshal(resp.Data, out); err != nil {
 				err = errno.Errorf(errno.ErrInternalServer, "json.Unmarshal error, json string: %s", resp.Data)

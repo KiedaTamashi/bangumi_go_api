@@ -189,3 +189,12 @@ func (ani *SubjectBgm) UnmarshalJSON(data []byte) error {
 
 	return nil
 }
+
+type RelatedSubject struct {
+	Id       int         `json:"id,omitempty"`
+	Type     SubjectType `json:"type,omitempty"`
+	Name     string      `json:"name,omitempty"`
+	NameCn   string      `json:"name_cn,omitempty"`
+	Images   *ImageBgm   `json:"images,omitempty"`
+	Relation string      `json:"relation,omitempty"`
+}

@@ -16,3 +16,33 @@ func TestGetSubject(t *testing.T) {
 	}
 	fmt.Printf("%s", common.JsonFormat(resp))
 }
+
+func TestClient_GetSubjectPersons(t *testing.T) {
+	ctx := context.Background()
+	cli := NewBgmClient("test")
+	resp, err := cli.GetSubjectPersons(ctx, "", "311310")
+	if err != nil {
+		return
+	}
+	fmt.Printf("%s", common.JsonFormat(resp))
+}
+
+func TestClient_GetSubjectCharacters(t *testing.T) {
+	ctx := context.Background()
+	cli := NewBgmClient("test")
+	resp, err := cli.GetSubjectCharacters(ctx, "", "311310")
+	if err != nil {
+		return
+	}
+	fmt.Printf("%s", common.JsonFormat(resp))
+}
+
+func TestClient_GetSubjectRelations(t *testing.T) {
+	ctx := context.Background()
+	cli := NewBgmClient("test")
+	resp, err := cli.GetSubjectRelations(ctx, "", "311310")
+	if err != nil {
+		return
+	}
+	fmt.Printf("%s", common.JsonFormat(resp))
+}
