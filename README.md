@@ -52,7 +52,7 @@ Return
 
 -- 更多测试和封装方法在pkg/client/bgm_v0，每个都有对应的单测 \
 -- More Test and Functions in pkg/client/bgm_v0, with unit testing for each func.
-
+---
 ##TODO LIST
 - [x] BaseClient/Common Func
 - [x] Users
