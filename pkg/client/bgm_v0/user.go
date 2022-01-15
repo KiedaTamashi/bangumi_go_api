@@ -59,13 +59,16 @@ func (cli *Client) GetUserCollection(ctx context.Context, authToken string, user
 	if !subjectType.IsSupported() {
 		return nil, errno.Errorf(errno.ErrBadRequest, "subject type %v is illegal!", subjectType)
 	}
+	//if authToken==""{
+	//	return nil,errno.Errorf(errno.ErrBadRequest, "authToken is required for this function!")
+	//}
 	collectionStatusType := collectionStatusId.Type()
 	if !collectionStatusType.IsSupported() {
 		return nil, errno.Errorf(errno.ErrBadRequest, "collection type %v is illegal!", collectionStatusType)
 	}
 	param := map[string]string{
 		"subject_type": subjectType.ToString(),
-		"type":         collectionStatusType.String(),
+		"type":         collectionStatusId.String(),
 		"limit":        strconv.FormatInt(limit, 10),
 		"offset":       strconv.FormatInt(offset, 10),
 	}

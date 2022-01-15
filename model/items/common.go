@@ -47,3 +47,10 @@ var Num2MonthMap = map[string]string{
 	"11": "Nov",
 	"12": "Dec",
 }
+
+type WeekdayBgm struct {
+	Id int    `json:"id"` //1-9
+	EN string `json:"en,omitempty"`
+	CN string `json:"cn,omitempty"`
+	JA string `json:"ja,omitempty"`
+}

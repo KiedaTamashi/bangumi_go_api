@@ -9,16 +9,16 @@ import (
 
 //SubjectBgm bangumi anime条目的格式
 type SubjectBgm struct {
-	Id       int       `json:"id,omitempty"`
-	Type     int       `json:"type,omitempty"`
-	Name     string    `json:"name,omitempty"`
-	NameCn   string    `json:"name_cn,omitempty"`
-	Summary  string    `json:"summary,omitempty"`
-	Nsfw     bool      `json:"nsfw,omitempty"`
-	Locked   bool      `json:"locked,omitempty"`
-	Date     time.Time `json:"date,omitempty"` //放送日期
-	Platform string    `json:"platform,omitempty"`
-	Images   *ImageBgm `json:"images,omitempty"`
+	Id       int         `json:"id,omitempty"`
+	Type     SubjectType `json:"type,omitempty"`
+	Name     string      `json:"name,omitempty"`
+	NameCn   string      `json:"name_cn,omitempty"`
+	Summary  string      `json:"summary,omitempty"`
+	Nsfw     bool        `json:"nsfw,omitempty"`
+	Locked   bool        `json:"locked,omitempty"`
+	Date     time.Time   `json:"date,omitempty"` //放送日期
+	Platform string      `json:"platform,omitempty"`
+	Images   *ImageBgm   `json:"images,omitempty"`
 	//Infobox       []*detaiInfoBoxItemBgm 			  `json:"infobox,omitempty"` //[]*detaiInfoBoxItemBgm
 	Volumes       int            `json:"volumes,omitempty"`
 	Eps           int            `json:"eps,omitempty"`
@@ -29,7 +29,7 @@ type SubjectBgm struct {
 	// infobox 具体内容
 	AliasName            []string  `json:"alias_name,omitempty"`
 	AirDate              time.Time `json:"air_date"`              //放送日期
-	AirWeek              WeekNo    `json:"air_week,omitempty"`    //放送星期
+	AirWeekday           WeekNo    `json:"air_weekday,omitempty"` //放送星期
 	AirTvSite            string    `json:"air_tv_site,omitempty"` //放送电视台
 	OtherTvSite          string    `json:"other_tv_site,omitempty"`
 	OfficialWebSite      string    `json:"official_web_site,omitempty"`
@@ -75,16 +75,16 @@ type detailInfoBoxItemBgm struct {
 func (ani *SubjectBgm) UnmarshalJSON(data []byte) error {
 	tmp := struct {
 		//Nested
-		Id       int       `json:"id,omitempty"`
-		Type     int       `json:"type,omitempty"`
-		Name     string    `json:"name,omitempty"`
-		NameCn   string    `json:"name_cn,omitempty"`
-		Summary  string    `json:"summary,omitempty"`
-		Nsfw     bool      `json:"nsfw,omitempty"`
-		Locked   bool      `json:"locked,omitempty"`
-		Date     string    `json:"date,omitempty"`
-		Platform string    `json:"platform,omitempty"`
-		Images   *ImageBgm `json:"images,omitempty"`
+		Id       int         `json:"id,omitempty"`
+		Type     SubjectType `json:"type,omitempty"`
+		Name     string      `json:"name,omitempty"`
+		NameCn   string      `json:"name_cn,omitempty"`
+		Summary  string      `json:"summary,omitempty"`
+		Nsfw     bool        `json:"nsfw,omitempty"`
+		Locked   bool        `json:"locked,omitempty"`
+		Date     string      `json:"date,omitempty"`
+		Platform string      `json:"platform,omitempty"`
+		Images   *ImageBgm   `json:"images,omitempty"`
 		//Infobox       []*detaiInfoBoxItemBgm 			  `json:"infobox,omitempty"` //[]*detaiInfoBoxItemBgm
 		Volumes       int            `json:"volumes,omitempty"`
 		Eps           int            `json:"eps,omitempty"`
@@ -147,7 +147,7 @@ func (ani *SubjectBgm) UnmarshalJSON(data []byte) error {
 				(ani).AirDate, _ = time.Parse("2006-01-02 15:04:05", fmt.Sprintf("%4s-%2s-%2s", yearMonthDay[0], yearMonthDay[1], yearMonthDay[2])+" 00:00:00")
 			}
 		case "放送星期":
-			(ani).AirWeek = WeekNo(box.Value.(string))
+			(ani).AirWeekday = WeekNo(box.Value.(string))
 		case "官方网站":
 			(ani).OfficialWebSite = box.Value.(string)
 		case "播放电视台":
@@ -190,6 +190,7 @@ func (ani *SubjectBgm) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+//RelatedSubject 条目下所关联的条目
 type RelatedSubject struct {
 	Id       int         `json:"id,omitempty"`
 	Type     SubjectType `json:"type,omitempty"`

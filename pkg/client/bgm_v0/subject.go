@@ -70,3 +70,14 @@ func (cli Client) GetSubjectRelations(ctx context.Context, authToken string, sub
 	}
 	return resp, nil
 }
+
+//GetCalendar 获取每日放送的条目
+func (cli Client) GetCalendar(ctx context.Context) ([]*items.CalendarItem, error) {
+	var resp = make([]*items.CalendarItem, 0)
+	param := map[string]string{}
+	err := cli.GET(ctx, "/calendar", "", 0, param, nil, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}

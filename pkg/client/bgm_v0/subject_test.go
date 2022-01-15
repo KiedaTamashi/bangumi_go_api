@@ -46,3 +46,13 @@ func TestClient_GetSubjectRelations(t *testing.T) {
 	}
 	fmt.Printf("%s", common.JsonFormat(resp))
 }
+
+func TestClient_GetCalendar(t *testing.T) {
+	ctx := context.Background()
+	cli := NewBgmClient("test")
+	resp, err := cli.GetCalendar(ctx)
+	if err != nil {
+		return
+	}
+	fmt.Printf("%s", common.JsonFormat(resp))
+}

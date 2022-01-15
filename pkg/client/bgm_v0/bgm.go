@@ -115,16 +115,13 @@ func (cli *Client) Call(ctx context.Context, method, absolutePath string,
 		//	//} `json:"data"`
 		//	Data 	string `json:"data"`
 		//}
-		resp := &respType{
-			//Data: content,
-		}
-
+		resp := &respType{}
 		// todo [refine] 如何才能优美并整合地解析？
 		if err := json.Unmarshal([]byte(content), &resp); err != nil || resp.Data == nil {
-			if err != nil {
-				err = errno.Errorf(errno.ErrInternalServer, "json.Unmarshal error, json body: %s", content)
-				logger.Error("%v", err)
-			}
+			//if err != nil {
+			//	err = errno.Errorf(errno.ErrInternalServer, "json.Unmarshal error, json body: %s", content)
+			//	logger.Error("%v", err)
+			//}
 			resp = &respType{
 				Data: []byte(content),
 			}
