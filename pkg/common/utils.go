@@ -53,3 +53,23 @@ func GetBytes(key interface{}) ([]byte, error) {
 	}
 	return buf.Bytes(), nil
 }
+
+func StrPtrEmptyNil(s string) *string {
+	if s == "" {
+		return nil
+	}
+	return StrPtr(s)
+}
+
+func StrPtr(s string) *string {
+	res := new(string)
+	*res = s
+	return res
+}
+
+func IfElse(condition bool, o1 string, o2 string) string {
+	if condition {
+		return o1
+	}
+	return o2
+}
