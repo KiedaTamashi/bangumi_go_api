@@ -164,9 +164,19 @@ func (cli *Client) callJson(ctx context.Context, method, absolutePath, authToken
 }
 
 //POST fixme [auth] token自动刷新问题。目前bgm的token刷新并不完善，目前先不管。之后可以在外面加一层，先获取token，再调用具体func
-func (cli *Client) POST(ctx context.Context, absolutePath, authToken string, retry uint, in map[string]string, out interface{}) error {
+func (cli *Client) POST(ctx context.Context, absolutePath, authToken string, retry uint, param map[string]string, in map[string]string, out interface{}) error {
 	if cli.skip {
 		return nil
+	}
+	if param != nil {
+		absolutePath = fmt.Sprintf("%s?", absolutePath)
+		for k, v := range param {
+			if v == "" {
+				continue
+			}
+			absolutePath = fmt.Sprintf("%s%s=%s&", absolutePath, k, v)
+		}
+		absolutePath = strings.TrimSuffix(absolutePath, "&")
 	}
 	return cli.callJson(ctx, "POST", absolutePath, authToken, retry, in, out)
 }

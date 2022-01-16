@@ -7,7 +7,7 @@ type RatingBgm struct {
 	Score float64        `json:"score"`
 }
 
-type CollectionBgm struct {
+type CollectionOverviewBgm struct {
 	Wish    int `json:"wish"`
 	Collect int `json:"collect"`
 	Doing   int `json:"doing"`

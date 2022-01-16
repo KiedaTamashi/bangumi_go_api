@@ -57,8 +57,8 @@ Return
 - [x] BaseClient/Common Func
 - [x] Users
 - [x] Subject
-- [ ] Search
-- [ ] Collection
+- [x] Search
+- [x] Collection
 - [ ] Chapter
 - [ ] Character
 - [ ] Persons

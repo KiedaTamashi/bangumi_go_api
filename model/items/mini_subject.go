@@ -23,20 +23,20 @@ type UserCollection struct {
 
 //SubjectMedium Calendar 中出现的小型subject结构体. 对应schema里的subjectSmall，search里的subject medium
 type SubjectMedium struct {
-	Id         int            `json:"id,omitempty"`
-	Url        string         `json:"url,omitempty"`
-	Type       SubjectType    `json:"type,omitempty"`
-	Name       string         `json:"name,omitempty"`
-	NameCn     string         `json:"name_cn,omitempty"`
-	Summary    string         `json:"summary,omitempty"`
-	AirDate    time.Time      `json:"air_date"`              //放送日期
-	AirWeekday int            `json:"air_weekday,omitempty"` //放送星期
-	Images     *ImageBgm      `json:"images,omitempty"`
-	Eps        int            `json:"eps,omitempty"`
-	EpsCount   int            `json:"eps_count,omitempty"`
-	Rating     *RatingBgm     `json:"rating,omitempty"`
-	Rank       int            `json:"rank"`
-	Collection *CollectionBgm `json:"collection,omitempty"`
+	Id         int                    `json:"id,omitempty"`
+	Url        string                 `json:"url,omitempty"`
+	Type       SubjectType            `json:"type,omitempty"`
+	Name       string                 `json:"name,omitempty"`
+	NameCn     string                 `json:"name_cn,omitempty"`
+	Summary    string                 `json:"summary,omitempty"`
+	AirDate    time.Time              `json:"air_date"`              //放送日期
+	AirWeekday int                    `json:"air_weekday,omitempty"` //放送星期
+	Images     *ImageBgm              `json:"images,omitempty"`
+	Eps        int                    `json:"eps,omitempty"`
+	EpsCount   int                    `json:"eps_count,omitempty"`
+	Rating     *RatingBgm             `json:"rating,omitempty"`
+	Rank       int                    `json:"rank"`
+	Collection *CollectionOverviewBgm `json:"collection,omitempty"`
 }
 
 func (subs *SubjectMedium) UnmarshalJSON(data []byte) error {
@@ -48,13 +48,13 @@ func (subs *SubjectMedium) UnmarshalJSON(data []byte) error {
 		NameCn  string      `json:"name_cn,omitempty"`
 		Summary string      `json:"summary,omitempty"`
 		//AirDate             time.Time 			`json:"air_date"`              //放送日期
-		AirWeekday int            `json:"air_weekday,omitempty"` //放送星期
-		Images     *ImageBgm      `json:"images,omitempty"`
-		Eps        int            `json:"eps,omitempty"`
-		EpsCount   int            `json:"eps_count,omitempty"`
-		Rating     *RatingBgm     `json:"rating,omitempty"`
-		Rank       int            `json:"rank"`
-		Collection *CollectionBgm `json:"collection,omitempty"`
+		AirWeekday int                    `json:"air_weekday,omitempty"` //放送星期
+		Images     *ImageBgm              `json:"images,omitempty"`
+		Eps        int                    `json:"eps,omitempty"`
+		EpsCount   int                    `json:"eps_count,omitempty"`
+		Rating     *RatingBgm             `json:"rating,omitempty"`
+		Rank       int                    `json:"rank"`
+		Collection *CollectionOverviewBgm `json:"collection,omitempty"`
 	}{}
 	tmpNest := struct {
 		AirDate string `json:"air_date"` //放送日期

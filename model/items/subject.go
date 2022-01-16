@@ -20,12 +20,12 @@ type SubjectBgm struct {
 	Platform string      `json:"platform,omitempty"`
 	Images   *ImageBgm   `json:"images,omitempty"`
 	//Infobox       []*detaiInfoBoxItemBgm 			  `json:"infobox,omitempty"` //[]*detaiInfoBoxItemBgm
-	Volumes       int            `json:"volumes,omitempty"`
-	Eps           int            `json:"eps,omitempty"`
-	TotalEpisodes int            `json:"total_episodes,omitempty"` //总集数
-	Rating        *RatingBgm     `json:"rating,omitempty"`
-	Collection    *CollectionBgm `json:"collection,omitempty"`
-	Tags          []*TagBgm      `json:"tags,omitempty"`
+	Volumes       int                    `json:"volumes,omitempty"`
+	Eps           int                    `json:"eps,omitempty"`
+	TotalEpisodes int                    `json:"total_episodes,omitempty"` //总集数
+	Rating        *RatingBgm             `json:"rating,omitempty"`
+	Collection    *CollectionOverviewBgm `json:"collection,omitempty"`
+	Tags          []*TagBgm              `json:"tags,omitempty"`
 	// infobox 具体内容
 	AliasName            []string  `json:"alias_name,omitempty"`
 	AirDate              time.Time `json:"air_date"`              //放送日期
@@ -86,12 +86,12 @@ func (ani *SubjectBgm) UnmarshalJSON(data []byte) error {
 		Platform string      `json:"platform,omitempty"`
 		Images   *ImageBgm   `json:"images,omitempty"`
 		//Infobox       []*detaiInfoBoxItemBgm 			  `json:"infobox,omitempty"` //[]*detaiInfoBoxItemBgm
-		Volumes       int            `json:"volumes,omitempty"`
-		Eps           int            `json:"eps,omitempty"`
-		TotalEpisodes int            `json:"total_episodes,omitempty"`
-		Rating        *RatingBgm     `json:"rating,omitempty"`
-		Collection    *CollectionBgm `json:"collection,omitempty"`
-		Tags          []*TagBgm      `json:"tags,omitempty"`
+		Volumes       int                    `json:"volumes,omitempty"`
+		Eps           int                    `json:"eps,omitempty"`
+		TotalEpisodes int                    `json:"total_episodes,omitempty"`
+		Rating        *RatingBgm             `json:"rating,omitempty"`
+		Collection    *CollectionOverviewBgm `json:"collection,omitempty"`
+		Tags          []*TagBgm              `json:"tags,omitempty"`
 	}{}
 	// unmarshal Nested alone
 	tmpNest := struct {

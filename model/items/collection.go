@@ -1,5 +1,11 @@
 package items
 
+import (
+	"encoding/json"
+	"fmt"
+	"time"
+)
+
 type CollectionStatusType string
 
 const (
@@ -144,4 +150,50 @@ type CollectionStatus struct {
 	Id   CollectionStatusId   `json:"id,required"`
 	Type CollectionStatusType `json:"type,omitempty"`
 	Name CollectionStatusName `json:"name,omitempty"`
+}
+
+type CollectionBgm struct {
+	Id        int64            `json:"id"` //这个collection 的 subject id
+	Status    CollectionStatus `json:"status"`
+	Rating    int              `json:"rating"`
+	Comment   string           `json:"comment"`
+	Private   bool             `json:"private"`
+	Tag       []string         `json:"tag"`
+	EpStatus  int              `json:"ep_status"`
+	VolStatus int              `json:"vol_status"`
+	Lasttouch time.Time        `json:"lasttouch"`
+	User      *UserBgm         `json:"user"`
+}
+
+func (c *CollectionBgm) UnmarshalJSON(data []byte) error {
+	tmp := struct {
+		Id        int              `json:"id"` //这个collection 的 subject id
+		Status    CollectionStatus `json:"status"`
+		Rating    int              `json:"rating,omitempty"`
+		Comment   string           `json:"comment,omitempty"`
+		Private   int              `json:"private,omitempty"`
+		Tag       []string         `json:"tag,omitempty"`
+		EpStatus  int              `json:"ep_status,omitempty"`
+		VolStatus int              `json:"vol_status,omitempty"`
+		Lasttouch int64            `json:"lasttouch"`
+		User      *UserBgm         `json:"user,omitempty"`
+	}{}
+	if err := json.Unmarshal(data, &tmp); err != nil {
+		fmt.Printf("failed to parse object: %v", err)
+		return err
+	}
+	(c).Status = tmp.Status
+	(c).Rating = tmp.Rating
+	(c).Comment = tmp.Comment
+	if tmp.Private == 0 {
+		(c).Private = false
+	} else {
+		(c).Private = true
+	}
+	(c).Tag = tmp.Tag
+	(c).Lasttouch = time.Unix(tmp.Lasttouch, 0)
+	(c).EpStatus = tmp.EpStatus
+	(c).VolStatus = tmp.VolStatus
+	(c).User = tmp.User
+	return nil
 }
