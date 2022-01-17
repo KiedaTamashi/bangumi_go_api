@@ -27,7 +27,7 @@ func JsonFormat(i interface{}) string {
 	}
 }
 
-// 把object转化为 map 形式， 便于在生成json时添加一些额外的字段
+//ToMap 把object转化为 map 形式， 便于在生成json时添加一些额外的字段
 func ToMap(o interface{}) (map[string]interface{}, error) {
 	jsonByte, err := json.Marshal(o)
 	if err != nil {
@@ -63,6 +63,19 @@ func StrPtrEmptyNil(s string) *string {
 
 func StrPtr(s string) *string {
 	res := new(string)
+	*res = s
+	return res
+}
+
+func Int64PtrEmptyNil(s int64) *int64 {
+	if s == 0 {
+		return nil
+	}
+	return Int64Ptr(s)
+}
+
+func Int64Ptr(s int64) *int64 {
+	res := new(int64)
 	*res = s
 	return res
 }

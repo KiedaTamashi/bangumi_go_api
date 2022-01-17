@@ -6,6 +6,7 @@ import (
 	"fmt"
 	mError "github.com/XiaoSanGit/bangumi_go_api/model/error"
 	"github.com/XiaoSanGit/bangumi_go_api/pkg/client/httpcli"
+	"github.com/XiaoSanGit/bangumi_go_api/pkg/common"
 	"github.com/XiaoSanGit/bangumi_go_api/pkg/errno"
 	"github.com/XiaoSanGit/bangumi_go_api/pkg/types"
 	"net/http"
@@ -61,6 +62,80 @@ func (cli *Client) call(ctx context.Context, method, url string,
 	//params["caller"] = cli.Caller
 	//return httpcli.HttpWithCli(ctx, cli.cli, method, cli.proxyUrl, params, headers, body, retryCount)
 	return httpcli.HttpWithCli(ctx, cli.cli, method, url, params, headers, body, retryCount)
+}
+
+func (cli *Client) callEncodedUrl(ctx context.Context, method, url string,
+	params map[string]string, headers map[string]string, body map[string]string, retryCount uint) (int, string, error) {
+	if params == nil {
+		params = make(map[string]string)
+	}
+	//params["query"] = url
+	//params["caller"] = cli.Caller
+	//return httpcli.HttpWithCli(ctx, cli.cli, method, cli.proxyUrl, params, headers, body, retryCount)
+	return httpcli.HttpFromUrlEncode(ctx, cli.cli, method, url, params, headers, body, retryCount)
+}
+
+func (cli *Client) callFromUrlEncode(ctx context.Context, method, absolutePath, authToken string, retry uint, in interface{}, out interface{}) error {
+	headers := make(map[string]string)
+	headers["Content-Type"] = "application/x-www-form-urlencoded"
+	if authToken != "" {
+		headers["Authorization"] = authToken
+	}
+
+	if cli.concurrencyChan != nil {
+		cli.concurrencyChan <- true
+		defer func() {
+			if cli.concurrencyChan != nil {
+				<-cli.concurrencyChan
+			}
+		}()
+	}
+	if len(headers["Content-Type"]) == 0 {
+		headers["Content-Type"] = "application/json"
+	}
+	for {
+		body, ok := in.(map[string]string)
+		if !ok {
+			return errno.Errorf(errno.ErrBadRequest, "in is not map[string]string!")
+		}
+		statusCode, content, err := cli.callEncodedUrl(ctx, method, cli.host+absolutePath, //content 为body raw string
+			nil, headers, in.(map[string]string), 1)
+		if err != nil {
+			return err
+		}
+		// 校验统一抓取返回的结果
+		if statusCode != 200 {
+			var httpErrorReason string
+			if statusCode == 404 {
+				httpErrorReason = "Not Found"
+			} else if statusCode == 422 {
+				httpErrorReason = "Validation Error"
+				httpErrorRsp := mError.ValidationError{}
+				if err = json.Unmarshal([]byte(content), &httpErrorRsp); err == nil {
+					//todo [refine] 解析错误码内容，做特殊处理？
+				}
+			}
+			err = errno.Errorf(errno.ErrInternalServer, "http [%s] error, path: %s, request body: %s, status_code: %d, response body: %s",
+				httpErrorReason, absolutePath, common.Json(body), statusCode, content)
+			logger.Error("%v", err)
+			return err
+		}
+		resp := &respType{}
+		// todo [refine] 如何才能优美并整合地解析？
+		if err := json.Unmarshal([]byte(content), &resp); err != nil || resp.Data == nil {
+			resp = &respType{
+				Data: []byte(content),
+			}
+		}
+		if out != nil {
+			if err := json.Unmarshal(resp.Data, out); err != nil {
+				err = errno.Errorf(errno.ErrInternalServer, "json.Unmarshal error, json string: %s", resp.Data)
+				logger.Error("%v", err)
+				return err
+			}
+		}
+		return nil
+	}
 }
 
 func (cli *Client) Call(ctx context.Context, method, absolutePath string,
@@ -164,7 +239,7 @@ func (cli *Client) callJson(ctx context.Context, method, absolutePath, authToken
 }
 
 //POST fixme [auth] token自动刷新问题。目前bgm的token刷新并不完善，目前先不管。之后可以在外面加一层，先获取token，再调用具体func
-func (cli *Client) POST(ctx context.Context, absolutePath, authToken string, retry uint, param map[string]string, in map[string]string, out interface{}) error {
+func (cli *Client) POST(ctx context.Context, absolutePath, authToken string, retry uint, param map[string]string, in map[string]string, out interface{}, isUrlEncoded bool) error {
 	if cli.skip {
 		return nil
 	}
@@ -178,7 +253,11 @@ func (cli *Client) POST(ctx context.Context, absolutePath, authToken string, ret
 		}
 		absolutePath = strings.TrimSuffix(absolutePath, "&")
 	}
-	return cli.callJson(ctx, "POST", absolutePath, authToken, retry, in, out)
+	if isUrlEncoded {
+		return cli.callFromUrlEncode(ctx, "POST", absolutePath, authToken, retry, in, out)
+	} else {
+		return cli.callJson(ctx, "POST", absolutePath, authToken, retry, in, out)
+	}
 }
 
 func (cli *Client) GET(ctx context.Context, absolutePath, authToken string, retry uint, param map[string]string, in interface{}, out interface{}) error {

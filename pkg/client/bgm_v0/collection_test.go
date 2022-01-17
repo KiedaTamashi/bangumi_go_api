@@ -23,7 +23,26 @@ func TestClient_ManageCollection(t *testing.T) {
 	cli := NewBgmClient("test")
 	var tags []string
 	resp, err := cli.ManageCollection(ctx, "Bearer xxx", "265", items.CollectionStatusTypeCollect,
-		"7", tags, 8, 0)
+		"", tags, 9, 0)
+	if err != nil {
+		return
+	}
+	fmt.Printf("%s", common.JsonFormat(resp))
+}
+
+func TestClient_ManageCollectionRaw(t *testing.T) {
+	ctx := context.Background()
+	cli := NewBgmClient("test")
+	params := ManageCollectionParam{
+		SubjectId: "265",
+		Status:    items.CollectionStatusTypeCollect,
+		//Comment: common.StrPtrEmptyNil("2"),
+		Tags:   nil,
+		Rating: common.Int64PtrEmptyNil(9),
+		//Privacy: common.Int64PtrEmptyNil(1),
+	}
+	//var tags []string
+	resp, err := cli.ManageCollectionRaw(ctx, "Bearer xxx", params)
 	if err != nil {
 		return
 	}
