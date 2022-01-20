@@ -26,7 +26,7 @@ type SubjectBgm struct {
 	Rating        *RatingBgm             `json:"rating,omitempty"`
 	Collection    *CollectionOverviewBgm `json:"collection,omitempty"`
 	Tags          []*TagBgm              `json:"tags,omitempty"`
-	// infobox 具体内容
+	// infobox 具体内容 todo [refine] 合并infobox
 	AliasName            []string  `json:"alias_name,omitempty"`
 	AirDate              time.Time `json:"air_date"`              //放送日期
 	AirWeekday           WeekNo    `json:"air_weekday,omitempty"` //放送星期
@@ -50,26 +50,9 @@ type SubjectBgm struct {
 	AnimationDirector    string    `json:"animation_director,omitempty"`     //作监
 }
 
-type ImageBgm struct {
-	Large  string `json:"large,omitempty"` //均为url
-	Common string `json:"common,omitempty"`
-	Medium string `json:"medium,omitempty"`
-	Small  string `json:"small,omitempty"`
-	Grid   string `json:"grid,omitempty"`
-}
-
 type TagBgm struct {
 	Name  string `json:"name"`
 	Count int    `json:"count"`
-}
-
-type InfoBoxBgm struct {
-	Boxes []*detailInfoBoxItemBgm `json:"infobox,omitempty"` //[]*detaiInfoBoxItemBgm
-}
-
-type detailInfoBoxItemBgm struct {
-	Key   string      `json:"key,omitempty"`
-	Value interface{} `json:"value,omitempty"` //别名有点问题，value可能是复杂结构
 }
 
 func (ani *SubjectBgm) UnmarshalJSON(data []byte) error {
@@ -95,7 +78,7 @@ func (ani *SubjectBgm) UnmarshalJSON(data []byte) error {
 	}{}
 	// unmarshal Nested alone
 	tmpNest := struct {
-		Boxes []*detailInfoBoxItemBgm `json:"infobox,omitempty"`
+		Boxes []*DetailInfoBoxItemBgm `json:"infobox,omitempty"`
 	}{}
 	//fmt.Printf("parsing object json %s \n", string(data))
 	if err := json.Unmarshal(data, &tmp); err != nil {
@@ -186,7 +169,6 @@ func (ani *SubjectBgm) UnmarshalJSON(data []byte) error {
 			(ani).AnimationDirector = box.Value.(string)
 		}
 	}
-
 	return nil
 }
 

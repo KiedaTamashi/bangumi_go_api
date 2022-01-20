@@ -21,6 +21,14 @@ type AvatarBgm struct {
 	Small  string `json:"small,omitempty"`
 }
 
+type ImageBgm struct {
+	Large  string `json:"large,omitempty"` //均为url
+	Common string `json:"common,omitempty"`
+	Medium string `json:"medium,omitempty"`
+	Small  string `json:"small,omitempty"`
+	Grid   string `json:"grid,omitempty"`
+}
+
 type WeekNo string //星期几
 
 const (
@@ -53,4 +61,32 @@ type WeekdayBgm struct {
 	EN string `json:"en,omitempty"`
 	CN string `json:"cn,omitempty"`
 	JA string `json:"ja,omitempty"`
+}
+
+type BloodType int
+
+const (
+	BloodTypeA  = BloodType(1)
+	BloodTypeB  = BloodType(2)
+	BloodTypeAB = BloodType(3)
+	BloodTypeO  = BloodType(4)
+)
+
+func (bt BloodType) IsValid() bool {
+	return bt == BloodTypeA || bt == BloodTypeB || bt == BloodTypeAB || bt == BloodTypeO
+}
+
+type Stat struct {
+	Comments int `json:"comments"`
+	Collects int `json:"collects"`
+}
+
+type InfoBoxBgm struct {
+	Boxes []*DetailInfoBoxItemBgm `json:"infobox,omitempty"` //[]*detaiInfoBoxItemBgm
+}
+
+//DetailInfoBoxItemBgm todo [refine] bgm设计失误，以后把它优化掉吧
+type DetailInfoBoxItemBgm struct {
+	Key   string      `json:"key,omitempty"`
+	Value interface{} `json:"value,omitempty"` //别名有点问题，value可能是复杂结构
 }
