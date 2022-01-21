@@ -12,13 +12,44 @@ func (cli *Client) GetCharacterById(ctx context.Context, authToken string, chara
 	var resp = &items.CharacterDetail{}
 	param := map[string]string{}
 	if characterId == "" {
-		return nil, errno.Errorf(errno.ErrBadRequest, "subject id is required!")
+		return nil, errno.Errorf(errno.ErrBadRequest, "character id is required!")
 	}
 	err := cli.GET(ctx, "/v0/characters/"+characterId, authToken, 0, param, nil, resp)
 	if err != nil {
 		return nil, err
 	}
-	//subjectList = append(subjectList, resp)
-	//}
+
+	return resp, nil
+}
+
+//GetCharacterRelatedSubject 获得角色相关条目
+func (cli *Client) GetCharacterRelatedSubject(ctx context.Context, authToken string, characterId string) ([]*items.CharacterRelatedSubject, error) {
+
+	var resp = make([]*items.CharacterRelatedSubject, 0)
+	param := map[string]string{}
+	if characterId == "" {
+		return nil, errno.Errorf(errno.ErrBadRequest, "character id is required!")
+	}
+	err := cli.GET(ctx, "/v0/characters/"+characterId+"/subjects", authToken, 0, param, nil, &resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+
+//GetCharacterRelatedPerson 获得角色相关人物
+func (cli *Client) GetCharacterRelatedPerson(ctx context.Context, authToken string, characterId string) ([]*items.CharacterRelatedPerson, error) {
+
+	var resp = make([]*items.CharacterRelatedPerson, 0)
+	param := map[string]string{}
+	if characterId == "" {
+		return nil, errno.Errorf(errno.ErrBadRequest, "character id is required!")
+	}
+	err := cli.GET(ctx, "/v0/characters/"+characterId+"/persons", authToken, 0, param, nil, &resp)
+	if err != nil {
+		return nil, err
+	}
+
 	return resp, nil
 }

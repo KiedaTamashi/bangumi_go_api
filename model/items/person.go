@@ -54,11 +54,23 @@ func (pt PersonType) Name() string {
 	}
 }
 
+//RelatedPerson subject相关的person信息
 type RelatedPerson struct {
 	Id       int            `json:"id,omitempty"`
 	Name     string         `json:"name,omitempty"`
 	Type     PersonType     `json:"type,omitempty"`
 	Career   []PersonCareer `json:"career,omitempty"`
 	Images   *ImageBgm      `json:"images,omitempty"`
-	Relation string         `json:"relation,omitempty"` //比如oped设计，监督啥的
+	Relation string         `json:"relation"` //比如oped设计，监督啥的
+}
+
+//CharacterRelatedPerson [PersonCharacter] character相关的，person信息
+type CharacterRelatedPerson struct {
+	Id            int           `json:"id"`
+	Name          string        `json:"name"`
+	Type          CharacterType `json:"type"`
+	Images        *ImageBgm     `json:"images,omitempty"`
+	SubjectId     int           `json:"subject_id,omitempty"`
+	SubjectName   string        `json:"subject_name,omitempty"`
+	SubjectNameCn string        `json:"subject_name_cn,omitempty"`
 }

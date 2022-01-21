@@ -174,10 +174,18 @@ func (ani *SubjectBgm) UnmarshalJSON(data []byte) error {
 
 //RelatedSubject 条目下所关联的条目
 type RelatedSubject struct {
-	Id       int         `json:"id,omitempty"`
-	Type     SubjectType `json:"type,omitempty"`
+	Id       int         `json:"id"`
+	Type     SubjectType `json:"type"`
 	Name     string      `json:"name,omitempty"`
 	NameCn   string      `json:"name_cn,omitempty"`
 	Images   *ImageBgm   `json:"images,omitempty"`
 	Relation string      `json:"relation,omitempty"`
+}
+
+type CharacterRelatedSubject struct {
+	Id     int    `json:"id"`
+	Staff  string `json:"staff"`
+	Name   string `json:"name,omitempty"`
+	NameCn string `json:"name_cn,omitempty"`
+	Image  string `json:"image,omitempty"`
 }
