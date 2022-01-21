@@ -176,16 +176,16 @@ func (ani *SubjectBgm) UnmarshalJSON(data []byte) error {
 type RelatedSubject struct {
 	Id       int         `json:"id"`
 	Type     SubjectType `json:"type"`
-	Name     string      `json:"name,omitempty"`
-	NameCn   string      `json:"name_cn,omitempty"`
+	Name     string      `json:"name"`
+	NameCn   string      `json:"name_cn"`
 	Images   *ImageBgm   `json:"images,omitempty"`
-	Relation string      `json:"relation,omitempty"`
+	Relation string      `json:"relation"`
 }
 
 type CharacterRelatedSubject struct {
 	Id     int    `json:"id"`
 	Staff  string `json:"staff"`
-	Name   string `json:"name,omitempty"`
-	NameCn string `json:"name_cn,omitempty"`
+	Name   string `json:"name"`
+	NameCn string `json:"name_cn"`
 	Image  string `json:"image,omitempty"`
 }

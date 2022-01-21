@@ -39,9 +39,9 @@ func (cli *Client) GetCharacterRelatedSubject(ctx context.Context, authToken str
 }
 
 //GetCharacterRelatedPerson 获得角色相关人物
-func (cli *Client) GetCharacterRelatedPerson(ctx context.Context, authToken string, characterId string) ([]*items.CharacterRelatedPerson, error) {
+func (cli *Client) GetCharacterRelatedPerson(ctx context.Context, authToken string, characterId string) ([]*items.PersonCharacter, error) {
 
-	var resp = make([]*items.CharacterRelatedPerson, 0)
+	var resp = make([]*items.PersonCharacter, 0)
 	param := map[string]string{}
 	if characterId == "" {
 		return nil, errno.Errorf(errno.ErrBadRequest, "character id is required!")

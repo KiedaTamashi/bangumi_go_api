@@ -113,8 +113,11 @@ func (cd *CharacterDetail) UnmarshalJSON(data []byte) error {
 		switch box.Key {
 		case "别名":
 			for _, item := range box.Value.([]interface{}) {
-				for _, v := range item.(map[string]interface{}) {
-					(cd).AliasName = append((cd).AliasName, v.(string))
+				for k, v := range item.(map[string]interface{}) {
+					if k == "v" {
+						(cd).AliasName = append((cd).AliasName, v.(string))
+					}
+					//(cd).AliasName = append((cd).AliasName, v.(string))
 				}
 			}
 		case "出生地":
